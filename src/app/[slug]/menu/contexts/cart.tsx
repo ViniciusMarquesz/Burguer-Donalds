@@ -33,7 +33,25 @@ export const CartProvider = ({children}: {children: ReactNode}) => {
     }
 
     const addProduct = (product: CartProduct) => {
-        setProducts((prev) => [...prev, product]);
+
+        //Verifica se o produto já está no carrinho
+        //Se estiver, atualiza a quantidade
+        //Se não estiver, adiciona o produto ao carrinho
+        
+        setProducts((prevProducts) => {
+            const productAlreadyInCart = prevProducts.some(prevProduct => prevProduct.id === product.id);
+
+            if (productAlreadyInCart) {
+                return prevProducts.map(prevProduct => {
+                    if (prevProduct.id === product.id) {
+                        return { ...prevProduct, quantity: prevProduct.quantity + product.quantity };
+                    }
+                    return prevProduct;
+                });
+            }
+
+            return [...prevProducts, product];
+        })
     }
     return (
         <CartContext.Provider value={{
