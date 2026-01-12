@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 
 import { db } from "@/lib/prisma";
 
+import ProductDetails from "./components/product-details";
 import ProductHeader from "./components/product-header";
 
 interface ProductPageProps {
@@ -10,6 +11,7 @@ interface ProductPageProps {
 
 const ProductPage = async ({ params }: ProductPageProps) => {
   const { slug, productId } = await params;
+ 
   const product = await db.product.findUnique({
     where: { id: productId },
     include: {
@@ -22,6 +24,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
       },
     },
   });
+  
   if (!product) {
     return notFound();
   }
@@ -31,6 +34,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
   return (
     <div className="flex h-full flex-col">
       <ProductHeader product={product} />
+      <ProductDetails product={product} />
     </div>
   );
 };
